@@ -55,6 +55,7 @@ const SETTINGS_KEY = 'quicknotes.settings';
 
 const qn = {
   open: false,
+  desk: false,             // desktop phone popover (vs mobile fullscreen)
   loaded: false,
   screen: 'home',          // 'home' | 'list' | 'task'
   listId: null,            // a todo item id, or 'smart:<key>'
@@ -115,6 +116,7 @@ async function load() {
     createdAt: l.createdAt
   }));
   qn.loaded = true;
+  updateBadge();
   render();
 }
 
@@ -223,11 +225,55 @@ function agoLabel(ms) {
 // ---------------------------------------------------------------------------
 export function isQuickNotesOpen() { return qn.open; }
 
-export function openQuickNotes() {
+function placeDeskPanel() {
+  const btn = el('phoneNotes');
+  const panel = el('quicknotes');
+  if (!btn || !panel) return;
+  const r = btn.getBoundingClientRect();
+  const w = 360;
+  let left = r.left + r.width / 2 - w / 2;
+  left = Math.max(12, Math.min(left, window.innerWidth - w - 12));
+  panel.style.left = left + 'px';
+  panel.style.top = (r.bottom + 10) + 'px';
+}
+
+function syncPhoneBtn() {
+  const btn = el('phoneNotes');
+  if (!btn) return;
+  btn.setAttribute('aria-expanded', qn.open && qn.desk ? 'true' : 'false');
+}
+
+function updateBadge() {
+  const badge = el('phoneNotesBadge');
+  if (!badge) return;
+  const n = qn.lists.length;
+  badge.textContent = String(n);
+  badge.hidden = n === 0;
+}
+
+async function refreshBadge() {
+  if (qn.loaded) { updateBadge(); return; }
+  try {
+    const r = await api.todos();
+    const badge = el('phoneNotesBadge');
+    if (!badge) return;
+    const n = (r.lists || []).length;
+    badge.textContent = String(n);
+    badge.hidden = n === 0;
+  } catch (e) { /* badge is decorative */ }
+}
+
+export function openQuickNotes(opts) {
   qn.open = true;
+  qn.desk = !!(opts && opts.desk);
   qn.screen = 'home';
   el('quicknotes').hidden = false;
+  const head = el('qnDeskHead');
+  if (head) head.hidden = !qn.desk;
   document.body.classList.add('qn-open');
+  document.body.classList.toggle('qn-desk', qn.desk);
+  if (qn.desk) placeDeskPanel();
+  syncPhoneBtn();
   render();                                        // paint the cached lists…
   load().catch(() => { if (!qn.loaded) toast('Could not load your lists'); });   // …then refresh
 }
@@ -235,10 +281,17 @@ export function openQuickNotes() {
 export function closeQuickNotes() {
   const sent = flushSaves();
   qn.open = false;
+  qn.desk = false;
   qn.searchOpen = false;
   hideSheet();
   el('quicknotes').hidden = true;
-  document.body.classList.remove('qn-open');
+  const head = el('qnDeskHead');
+  if (head) head.hidden = true;
+  document.body.classList.remove('qn-open', 'qn-desk');
+  el('quicknotes').style.left = '';
+  el('quicknotes').style.top = '';
+  syncPhoneBtn();
+  updateBadge();
   // edits here change cards on the board, so pull the open canvas back in sync
   // once the last write has actually landed
   if (qn.dirty && state.view.canvas) {
@@ -246,6 +299,11 @@ export function closeQuickNotes() {
     qn.dirty = false;
     Promise.all(sent).then(() => openCanvas(id));
   }
+}
+
+export function togglePhoneNotes() {
+  if (qn.open && qn.desk) closeQuickNotes();
+  else openQuickNotes({ desk: true });
 }
 
 function goHome() { qn.screen = 'home'; qn.adding = false; render(); }
@@ -804,6 +862,10 @@ function deleteTask(list, task) {
 // Wiring
 // ---------------------------------------------------------------------------
 export function initQuickNotes() {
+  const phone = el('phoneNotes');
+  if (phone) phone.onclick = togglePhoneNotes;
+  refreshBadge();
+
   el('qnSearchBtn').onclick = openSearch;
   el('qnHomeMenu').onclick = showSettingsSheet;
   el('qnBarMenu').onclick = showSettingsSheet;
@@ -878,11 +940,24 @@ export function initQuickNotes() {
   el('qnQueryClear').onclick = () => { qn.query = ''; el('qnQuery').value = ''; renderSearch(); refreshIcons(); el('qnQuery').focus(); };
   el('qnQuery').addEventListener('input', () => { qn.query = el('qnQuery').value; renderSearch(); refreshIcons(); });
 
-  // Quick notes is a phone-sized workspace; on a wide viewport the canvas owns
-  // the screen again, so drop back to it rather than hiding a live overlay.
+  // Mobile fullscreen ↔ desktop popover: close when the chrome that opened it
+  // disappears; re-anchor the popover while it stays open.
   window.addEventListener('resize', () => {
-    if (qn.open && window.innerWidth > 768) closeQuickNotes();
+    if (!qn.open) return;
+    if (qn.desk) {
+      if (window.innerWidth <= 768) closeQuickNotes();
+      else placeDeskPanel();
+    } else if (window.innerWidth > 768) {
+      closeQuickNotes();
+    }
   });
+
+  // Desktop popover: click outside dismisses (mobile stays fullscreen until Escape / Your boards).
+  document.addEventListener('pointerdown', e => {
+    if (!qn.open || !qn.desk) return;
+    if (e.target.closest('#quicknotes') || e.target.closest('#phoneNotes')) return;
+    closeQuickNotes();
+  }, true);
 
   // Escape backs out one layer at a time: sheet → search → task → list → board.
   document.addEventListener('keydown', e => {

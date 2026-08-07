@@ -15,6 +15,10 @@
   <div class="dots"><i class="r"></i><i class="y"></i><i class="g"></i></div>
   <nav id="crumbs"></nav>
   <div class="top-right">
+    <button type="button" class="top-phone" id="phoneNotes" aria-label="From your phone" aria-expanded="false" aria-haspopup="dialog" title="From your phone">
+      <i data-lucide="smartphone"></i>
+      <span class="top-phone-badge" id="phoneNotesBadge" hidden>0</span>
+    </button>
     <span class="ghost" id="exportBtn">Export</span>
     <div class="zoomwrap">
       <button id="zoomOut" title="Zoom out">−</button>
@@ -137,10 +141,11 @@
   </div>
 </nav>
 
-<!-- Quick notes: mobile-only task workspace layered over the canvas.
+<!-- Quick notes: task workspace (mobile fullscreen / desktop phone popover).
      Three-level stack (overview → list → task) plus a modal search layer.
      Static chrome lives here; quicknotes.js fills every [id] region. -->
 <div id="quicknotes" hidden>
+  <div class="qn-deskhead" id="qnDeskHead" hidden>From your phone</div>
 
   <section class="qn-screen" id="qnHome">
     <div class="qn-scroll qn-home-scroll">

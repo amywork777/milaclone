@@ -58,6 +58,20 @@ input, textarea { font-family: var(--sans); }
 .top-right { margin-left: auto; display: flex; align-items: center; gap: 8px; color: var(--ink-soft); font-size: 13px; }
 .top-right .ghost { padding: 6px 10px; border-radius: 8px; }
 .top-right .ghost:hover { background: #f1f1f3; }
+.top-phone {
+  position: relative; border: none; background: none; color: var(--ink-soft);
+  width: 36px; height: 32px; border-radius: 8px; padding: 0;
+  display: grid; place-items: center;
+}
+.top-phone:hover, .top-phone[aria-expanded="true"] { background: #f1f1f3; color: var(--ink); }
+.top-phone :is(svg, i) { width: 20px; height: 20px; display: block; }
+.top-phone-badge {
+  position: absolute; top: 1px; right: 0; min-width: 16px; height: 16px; padding: 0 4px;
+  border-radius: 999px; background: #ef4b4b; color: #fff;
+  font-size: 10px; font-weight: 700; line-height: 16px; text-align: center;
+  pointer-events: none; box-shadow: 0 0 0 2px #fff;
+}
+.top-phone-badge[hidden] { display: none; }
 .zoomwrap { display: flex; align-items: center; gap: 2px; background: #f3f3f5; border-radius: 9px; padding: 2px; }
 .zoomwrap button { border: none; background: none; width: 26px; height: 24px; border-radius: 7px; font-size: 15px; color: var(--ink); }
 .zoomwrap button:hover { background: #e6e6ea; }
@@ -431,11 +445,11 @@ input, textarea { font-family: var(--sans); }
 }
 
 /* =========================================================================
-   Quick notes — the mobile task workspace (overview → list → task + search).
+   Quick notes — task workspace (overview → list → task + search).
 
-   Its own design tokens: a lighter, Reminders-style palette layered over the
-   canvas. Everything is scoped under #quicknotes, which only becomes visible
-   inside the mobile media query above.
+   Its own design tokens: a lighter, Reminders-style palette. Mobile: fullscreen
+   inside the media query above. Desktop: phone-sized popover under #phoneNotes
+   when body.qn-desk is set.
    ========================================================================= */
 #quicknotes {
   display: none;
@@ -462,6 +476,7 @@ input, textarea { font-family: var(--sans); }
   --qn-serif: "Source Serif 4", Georgia, serif;
   --qn-ease: cubic-bezier(.32, .72, .28, 1);
 }
+.qn-deskhead { display: none; }
 /* :where() keeps the reset at zero specificity so the component classes below
    (and their padding/background) still win */
 :where(#quicknotes) button { border: none; background: none; padding: 0; color: inherit; font-family: inherit; }
@@ -751,4 +766,47 @@ body.qn-open .toast {
   background: #16181C; border-radius: 999px; padding: 10px 18px;
   font-size: 14px; font-weight: 600; z-index: 130;
   bottom: calc(112px + env(safe-area-inset-bottom));
+}
+
+/* ---------- desktop: "From your phone" popover ---------- */
+@media (min-width: 769px) {
+  body.qn-desk #quicknotes:not([hidden]) {
+    display: flex; flex-direction: column;
+    inset: auto; width: 360px; height: min(72vh, 640px);
+    /* clip parked stack screens (translateX/Y) + sheet — they leak if visible */
+    border-radius: 12px; overflow: hidden;
+    border: 1px solid #dde0e5;
+    box-shadow: 0 8px 28px rgba(28, 30, 38, .14), 0 2px 8px rgba(28, 30, 38, .08);
+    animation: qn-desk-in .18s var(--qn-ease) both;
+  }
+  body.qn-desk .qn-deskhead {
+    display: block; flex: 0 0 auto; position: relative; z-index: 4;
+    background: #f3f4f6; color: #3a414d; border-radius: 12px 12px 0 0;
+    font-size: 15px; font-weight: 700; letter-spacing: .01em;
+    padding: 14px 16px 12px; border-bottom: 1px solid #e4e6ea;
+  }
+  body.qn-desk .qn-deskhead[hidden] { display: none; }
+  /* stack screens under the desk head; same transform nav as mobile */
+  body.qn-desk .qn-screen {
+    top: 46px; padding-top: 8px; border-radius: 0 0 12px 12px; overflow: hidden;
+  }
+  body.qn-desk .qn-bar { display: none; }
+  body.qn-desk .qn-home-scroll { padding-bottom: 28px; }
+  body.qn-desk .qn-title { font-size: 28px; }
+  body.qn-desk .qn-scroll {
+    scrollbar-width: thin; scrollbar-color: #c5cad3 transparent;
+  }
+  body.qn-desk .qn-scroll::-webkit-scrollbar { display: block; width: 7px; }
+  body.qn-desk .qn-scroll::-webkit-scrollbar-thumb {
+    background: #c5cad3; border-radius: 999px; border: 2px solid transparent; background-clip: padding-box;
+  }
+  body.qn-desk .qn-sheet {
+    left: 10px; right: 10px; bottom: 10px; border-radius: 16px;
+  }
+  body.qn-open.qn-desk .toast { bottom: 24px; }
+}
+
+@keyframes qn-desk-in {
+  from { opacity: 0; transform: translateY(-6px) scale(.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }

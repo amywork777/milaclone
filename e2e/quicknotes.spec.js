@@ -220,8 +220,23 @@ test('Your boards returns to the canvas', async ({ page }) => {
   await expect(page.locator('#stage')).toBeVisible();
 });
 
-test('Quick notes stays out of the way on desktop', async ({ page }) => {
+test('desktop phone button opens the From your phone popover', async ({ page }) => {
+  const title = uniq('DeskList');
+  await seedList(page, title, [{ id: 'a', text: 'Ship it', done: false }]);
   await page.setViewportSize({ width: 1200, height: 800 });
   await page.goto('/');
+
+  await expect(page.locator('#mNotes')).toBeHidden();
+  await expect(page.locator('#phoneNotes')).toBeVisible();
+  await expect(page.locator('#quicknotes')).toBeHidden();
+
+  await page.click('#phoneNotes');
+  await expect(page.locator('#quicknotes')).toBeVisible();
+  await expect(page.locator('body')).toHaveClass(/qn-desk/);
+  await expect(page.locator('#qnDeskHead')).toBeVisible();
+  await expect(page.locator('#qnDeskHead')).toHaveText('From your phone');
+  await expect(listRow(page, title)).toBeVisible();
+
+  await page.click('#stage', { position: { x: 40, y: 40 } });
   await expect(page.locator('#quicknotes')).toBeHidden();
 });
