@@ -73,6 +73,47 @@ function rootCanvasId() {
   return stmt.getMeta.get('rootCanvasId')?.value;
 }
 
+// One permanent Quick notes board under Home. Todo lists created from the
+// Quick notes UI live on its child canvas instead of cluttering Home.
+function ensureQuickNotesBoard() {
+  const rootId = rootCanvasId();
+  if (!rootId) return null;
+  const existing = stmt.getMeta.get('quickNotesCanvasId')?.value;
+  if (existing && stmt.getCanvas.get(existing)) return existing;
+
+  const childId = id('c_');
+  const boardId = id('i_');
+  const now = Date.now();
+  db.transaction(() => {
+    stmt.insertCanvas.run({
+      id: childId, title: 'Quick notes', parentCanvasId: rootId,
+      color: 'slate', icon: 'square-check-big', createdAt: now
+    });
+    let y = 60;
+    for (const it of stmt.itemsForCanvas.all(rootId)) {
+      if (it.parentItemId) continue;
+      y = Math.max(y, (it.y || 0) + (it.h || 200) + 24);
+    }
+    const z = (stmt.maxZ.get().m || 0) + 1;
+    stmt.insertItem.run({
+      id: boardId, canvasId: rootId, parentItemId: null, type: 'board',
+      x: 60, y, w: 152, h: null, z, color: 'slate',
+      data: JSON.stringify({ childCanvasId: childId }), createdAt: now
+    });
+    // One-time: Home todos move onto the Quick notes canvas (keep x/y).
+    for (const row of stmt.todoItems.all()) {
+      if (row.canvasId !== rootId) continue;
+      stmt.updateItem.run({
+        id: row.id, canvasId: childId, parentItemId: null,
+        x: row.x, y: row.y, w: row.w, h: row.h, z: row.z,
+        color: row.color, data: row.data
+      });
+    }
+    stmt.setMeta.run('quickNotesCanvasId', childId);
+  })();
+  return childId;
+}
+
 process.on('SIGINT', () => { db.close(); process.exit(0); });
 process.on('SIGTERM', () => { db.close(); process.exit(0); });
 
@@ -140,6 +181,6 @@ function deleteItemDeep(itemId, visited) {
 }
 
 module.exports = {
-  DB_FILE, db, stmt, id, rootCanvasId,
+  DB_FILE, db, stmt, id, rootCanvasId, ensureQuickNotesBoard,
   rowToItem, breadcrumb, itemsForCanvas, deleteItemDeep
 };

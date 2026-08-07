@@ -61,6 +61,7 @@ const qn = {
   taskRef: null,           // { listId, taskId }
   lists: [],
   rootCanvasId: null,
+  quickNotesCanvasId: null,
   homeTag: null,
   searchOpen: false,
   query: '',
@@ -103,6 +104,7 @@ function normTask(t) {
 async function load() {
   const r = await api.todos();
   qn.rootCanvasId = r.rootCanvasId;
+  qn.quickNotesCanvasId = r.quickNotesCanvasId || null;
   if (savePending.size) return;   // a local edit is still in flight — keep ours
   qn.lists = (r.lists || []).map(l => ({
     id: l.id,
@@ -747,28 +749,29 @@ function addNoteToBoard() {
   createAt('note', w.x - defaultsFor('note').w / 2, w.y);
 }
 
-// New lists are real todo cards on the root board, placed under whatever is
-// already there so they don't land on top of an existing card.
+// New lists are todo cards on the permanent Quick notes board.
 async function createList() {
-  const rootId = qn.rootCanvasId || state.rootCanvasId;
-  if (!rootId) { toast('Could not reach your board'); return; }
+  // /api/todos ensures the board exists and returns its canvas id.
+  if (!qn.quickNotesCanvasId) await load();
+  const canvasId = qn.quickNotesCanvasId;
+  if (!canvasId) { toast('Could not reach your board'); return; }
   let y = 60;
   try {
-    const root = await api.canvas(rootId);
-    for (const it of root.items || []) {
+    const board = await api.canvas(canvasId);
+    for (const it of board.items || []) {
       if (it.parentItemId) continue;
       y = Math.max(y, (it.y || 0) + (it.h || 200) + 24);
     }
   } catch (e) { /* fall back to the default slot */ }
 
   const created = await api.create({
-    canvasId: rootId, type: 'todo', x: 60, y,
+    canvasId, type: 'todo', x: 60, y,
     w: defaultsFor('todo').w,
     data: { title: 'New list', tasks: [] }
   });
   qn.dirty = true;
   qn.lists.push({
-    id: created.id, canvasId: rootId, canvasTitle: '',
+    id: created.id, canvasId, canvasTitle: 'Quick notes',
     title: 'New list', color: created.color || null, tags: [], tasks: [], createdAt: created.createdAt
   });
   openList(created.id, { rename: true });

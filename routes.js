@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const {
-  db, stmt, id, rootCanvasId,
+  db, stmt, id, rootCanvasId, ensureQuickNotesBoard,
   rowToItem, breadcrumb, itemsForCanvas, deleteItemDeep
 } = require('./db');
 
@@ -210,6 +210,7 @@ router.delete('/api/item/:id', (req, res) => {
 // board. The mobile Quick-notes screens read them all in one go instead of
 // walking canvases; writes go back through the normal PATCH /api/item route.
 router.get('/api/todos', (req, res) => {
+  const quickNotesCanvasId = ensureQuickNotesBoard();
   const lists = stmt.todoItems.all().map(rowToItem).map(it => {
     const canvas = stmt.getCanvas.get(it.canvasId);
     return {
@@ -223,7 +224,7 @@ router.get('/api/todos', (req, res) => {
       createdAt: it.createdAt
     };
   });
-  res.json({ rootCanvasId: rootCanvasId(), lists });
+  res.json({ rootCanvasId: rootCanvasId(), quickNotesCanvasId, lists });
 });
 
 // ---- Upload ----------------------------------------------------------------
