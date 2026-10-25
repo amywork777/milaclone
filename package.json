@@ -10,7 +10,7 @@
     "test:e2e": "playwright test"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "dependencies": {
     "better-sqlite3": "^13.0.1",

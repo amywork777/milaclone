@@ -2,24 +2,33 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>Canvas Board</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pinboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Figtree:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/kit/tokens/tool.css">
 <link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/personal.css">
 </head>
 <body>
 
+<aside id="boardSidebar" aria-label="Your boards">
+  <div class="personal-brand"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M15 22c-6-1-12-5-10-10 3-7 11 0 13 5s-2 12-7 9c-5-3 2-15 8-17s11 2 8 7c-2 5-11 7-17 3"/></svg>pinboard</div>
+  <button id="findAnything" class="sidebar-search"><i data-lucide="search"></i>Find anything<span>⌘ K</span></button>
+  <div class="board-list-heading">Your boards<button id="newPersonalBoard" aria-label="New board"><i data-lucide="plus"></i></button></div>
+  <nav id="boardTree"></nav>
+  <div class="sidebar-bottom"><button id="backupButton"><i data-lucide="download"></i>Export backup</button><button id="personalHelp"><i data-lucide="circle-help"></i>A little help</button><span id="saveStatus" role="status">Saved on this Mac</span></div>
+</aside>
+<button id="sidebarVeil" aria-label="Close boards" hidden></button>
 <div id="topbar">
-  <div class="dots"><i class="r"></i><i class="y"></i><i class="g"></i></div>
   <nav id="crumbs"></nav>
   <div class="top-right">
     <button type="button" class="top-phone" id="phoneNotes" aria-label="From your phone" aria-expanded="false" aria-haspopup="dialog" title="From your phone">
       <i data-lucide="smartphone"></i>
       <span class="top-phone-badge" id="phoneNotesBadge" hidden>0</span>
     </button>
-    <span class="ghost" id="exportBtn">Export</span>
+    <button class="ghost" id="exportBtn">Export</button>
     <div class="zoomwrap">
       <button id="zoomOut" title="Zoom out">−</button>
       <span class="lvl" id="zoomLvl">100%</span>
@@ -28,6 +37,8 @@
     </div>
   </div>
 </div>
+
+<section id="boardHeading"><div><input id="personalTitle" aria-label="Board name" maxlength="200"><p id="personalSubtitle">Notes, references, and a little room to think.</p></div><div class="organize-actions"><button id="undoAction" title="Undo" aria-label="Undo"><i data-lucide="undo-2"></i></button><button id="redoAction" title="Redo" aria-label="Redo"><i data-lucide="redo-2"></i></button><button id="tidyAction"><i data-lucide="layout-grid"></i>Tidy up</button><button id="fitAction" title="Fit board" aria-label="Fit board"><i data-lucide="scan"></i></button></div></section>
 
 <aside id="rail">
   <div id="railCreate">
@@ -98,6 +109,7 @@
   <p class="hint-desktop">Pick a tool on the left, then click the canvas to add it.</p>
   <p class="hint-mobile">Tap +, pick a tool, then tap the canvas to add it.</p>
 </div>
+<div id="personalFooter"><span id="personalCount">Your personal workspace</span><span>Double-click to edit. Drag to arrange.</span></div>
 
 <header id="mheader" hidden>
   <button class="mh-btn" id="mBack" aria-label="Back"><i data-lucide="chevron-left"></i></button>
@@ -243,7 +255,11 @@
   <button data-act="zoomin">Zoom in</button>
   <button data-act="zoomout">Zoom out</button>
   <button data-act="reset">Reset view</button>
-  <button data-act="export">Export</button>
+    <button data-act="export">Export</button>
+    <button id="mobileFind">Find anything</button>
+    <button id="mobileBoards">Browse boards</button>
+    <button id="mobileTidy">Tidy up</button>
+    <button id="mobileUndo">Undo</button>
 </div>
 
 <div id="mBoardSheet" hidden>
@@ -254,7 +270,7 @@
 <div id="ctxmenu" role="menu"></div>
 <input type="file" id="fileInput" accept="image/*">
 <input type="file" id="uploadInput" accept=".pdf,.txt,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.json,text/*,application/pdf">
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="https://unpkg.com/lucide@0.469.0"></script>
 <script type="module" src="/js/main.js"></script>

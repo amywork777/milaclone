@@ -16,6 +16,7 @@ process.env.DATA_DIR = TMP;
 const express = require('express');
 const app = express();
 app.use(express.json());
+app.use(require('../workspace-routes'));
 app.use(require('../routes'));
 
 let base;
@@ -206,4 +207,34 @@ test('quick notes: task edits round-trip through PATCH /api/item', async () => {
   assert.deepEqual(saved.tasks, tasks);
   assert.deepEqual(saved.tags, ['life']);
   assert.equal(saved.title, 'Errands');          // shallow data merge keeps the title
+});
+
+test('workspace lists nested canvases and searchable note content',async()=>{
+  const view=(await get('/api/workspace')).body;
+  assert.ok(view.canvases.some(c=>c.parentCanvasId));
+  assert.ok(view.items.every(it=>typeof it.data==='object'));
+  assert.ok(view.canUndo);
+});
+
+test('undo restores a deleted board together with its inner notes, and redo removes it again',async()=>{
+  const canvasId=await root();
+  const card=(await send('POST','/api/item',{canvasId,type:'board',data:{title:'Restore me'}})).body;
+  const inner=(await send('POST','/api/item',{canvasId:card.data.childCanvasId,type:'note',data:{title:'Keep this'}})).body;
+  await send('DELETE','/api/item/'+card.id);
+  await send('POST','/api/history/undo');
+  const restored=await get('/api/canvas/'+card.data.childCanvasId);
+  assert.equal(restored.status,200);assert.ok(restored.body.items.some(it=>it.id===inner.id));
+  await send('POST','/api/history/redo');
+  assert.equal((await get('/api/canvas/'+card.data.childCanvasId)).status,404);
+});
+
+test('exported backup includes structured content and attachment bytes',async()=>{
+  const file=new FormData();file.append('file',new Blob(['backup test'],{type:'text/plain'}),'backup.txt');
+  const uploaded=await(await fetch(base+'/api/upload',{method:'POST',body:file})).json();
+  await send('POST','/api/item',{canvasId:await root(),type:'file',data:uploaded});
+  const result=(await get('/api/backup')).body;
+  assert.equal(result.format,'pinboard-milaclone');
+  assert.ok(result.canvases.length);assert.ok(result.items.length);
+  assert.equal(result.rootCanvasId,await root());
+  assert.equal(Buffer.from(result.files[path.basename(uploaded.src)],'base64').toString(),'backup test');
 });

@@ -2,7 +2,8 @@
 
 import { state, dom, elMap } from './state.js';
 import { colorVar, lucideEl, refreshIcons, autoGrow, isLocked, rid, normalizeUrl } from './util.js';
-import { select, enterEdit, exitEdit, saveData, deleteItem } from './editing.js';
+import { select, enterEdit, exitEdit, saveData, deleteItem, flushPendingSaves } from './editing.js';
+import { api } from './api.js';
 import { openPalette, openCtx } from './menus.js';
 import { updateSelectionChrome } from './boardchrome.js';
 import { onItemPointerDown, startResize } from './drag.js';
@@ -48,6 +49,7 @@ export function makeField(tag, cls, value, placeholder) {
   if (tag === 'area') f.rows = 1;
   f.className = cls; f.value = value || ''; f.placeholder = placeholder || '';
   f.setAttribute('data-edit', '');
+  f.setAttribute('aria-label', placeholder || 'Card text');
   f.readOnly = true; f.tabIndex = -1;
   if (tag === 'area') { f.addEventListener('input', () => autoGrow(f)); }
   return f;
@@ -57,6 +59,14 @@ export function renderItem(it) {
   const el = document.createElement('div');
   el.className = 'item type-' + it.type;
   el.dataset.id = it.id;
+  el.tabIndex = 0;
+  el.setAttribute('aria-label', (it._childTitle || it.data.title || it.data.name || it.type));
+  el.addEventListener('keydown', e => {
+    if (e.target !== el || e.key !== 'Enter') return;
+    e.preventDefault(); e.stopPropagation();
+    if (it.type === 'board') openCanvas(it.data.childCanvasId);
+    else { select(it.id); enterEdit(el); el.querySelector('[data-edit]')?.focus(); }
+  });
   if (it.id === state.selectedId) el.classList.add('selected');
   if (isLocked(it)) el.classList.add('locked');
   if (!it.parentItemId) {
@@ -81,10 +91,11 @@ export function renderItem(it) {
   if (it.type !== 'board') {
     const tools = document.createElement('div');
     tools.className = 'card-tools';
-    const colorBtn = document.createElement('div');
+    const colorBtn = document.createElement('button');
     colorBtn.className = 'swatch';
     colorBtn.style.background = colorVar(it.color || 'slate');
     colorBtn.title = 'Color';
+    colorBtn.setAttribute('aria-label', 'Card color');
     colorBtn.setAttribute('data-nodrag', '');
     colorBtn.onclick = (e) => { e.stopPropagation(); openPalette(it, colorBtn, 'color'); };
     const delBtn = document.createElement('button');
@@ -93,6 +104,14 @@ export function renderItem(it) {
     delBtn.title = 'Delete';
     delBtn.onclick = (e) => { e.stopPropagation(); deleteItem(it.id); };
     tools.appendChild(colorBtn); tools.appendChild(delBtn);
+    if (it.type !== 'column') {
+      const move = document.createElement('select');move.className='move-to';move.setAttribute('aria-label','Move card to column');move.setAttribute('data-nodrag','');
+      move.add(new Option('Loose on board',''));
+      for(const column of state.view.items.filter(i=>i.type==='column'))move.add(new Option(column.data.title||'Column',column.id));
+      move.value=it.parentItemId||'';
+      move.onchange=async()=>{await flushPendingSaves();await api.patch(it.id,{parentItemId:move.value||null,x:30,y:30});await openCanvas(state.view.canvas.id);};
+      tools.appendChild(move);
+    }
     if (isLocked(it)) {
       const lockBadge = document.createElement('span');
       lockBadge.className = 'lock-badge';
@@ -122,6 +141,7 @@ export function renderItem(it) {
 
 function buildNote(el, it) {
   el.classList.add('note');
+  if(it.color){el.classList.add('has-color');el.style.setProperty('--note-fill',({yellow:'#fff4ce',pink:'#f3e1e9',green:'#e5eddf',blue:'#e4ebf4',purple:'#eee6f3'})[it.color]||'#f5f2ee');}
   if (it.color) { const a = document.createElement('div'); a.className = 'accent'; a.style.background = colorVar(it.color); el.appendChild(a); }
   const t = makeField('area', 'ntitle', it.data.title, 'Title');
   const b = makeField('area', 'nbody', it.data.body, 'Write a note…');
@@ -156,6 +176,7 @@ function buildTodo(el, it) {
     tasks.forEach((task) => {
       const row = document.createElement('div'); row.className = 'task' + (task.done ? ' done' : '');
       const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = !!task.done; cb.setAttribute('data-nodrag', '');
+      cb.setAttribute('aria-label', task.text || 'Mark task complete');
       cb.onclick = (e) => { e.stopPropagation(); task.done = cb.checked; row.classList.toggle('done', task.done); saveData(it, { tasks }); };
       const tx = makeField('area', 'txt', task.text, 'List item');
       tx.addEventListener('input', () => { task.text = tx.value; saveData(it, { tasks }); });
@@ -164,6 +185,7 @@ function buildTodo(el, it) {
         if (e.key === 'Backspace' && tx.value === '' && tasks.length > 1) { e.preventDefault(); tasks.splice(tasks.indexOf(task), 1); saveData(it, { tasks }); renderTasks(); }
       });
       const del = document.createElement('button'); del.className = 'del'; del.textContent = '×'; del.setAttribute('data-nodrag', '');
+      del.setAttribute('aria-label', 'Remove task');
       del.onclick = (e) => { e.stopPropagation(); tasks.splice(tasks.indexOf(task), 1); saveData(it, { tasks }); renderTasks(); };
       row.appendChild(cb); row.appendChild(tx); row.appendChild(del);
       list.appendChild(row);
@@ -185,7 +207,7 @@ function buildLink(el, it) {
   const url = makeField('input', 'lurl', it.data.url, 'https://…');
   title.addEventListener('input', () => saveData(it, { title: title.value }));
   url.addEventListener('input', () => { saveData(it, { url: url.value }); open.href = normalizeUrl(url.value); });
-  const open = document.createElement('a'); open.className = 'open'; open.target = '_blank'; open.rel = 'noopener'; open.textContent = 'Open ↗';
+  const open = document.createElement('a'); open.className = 'open'; open.target = '_blank'; open.rel = 'noopener'; open.textContent = 'Open link';
   open.href = normalizeUrl(it.data.url || '#'); open.setAttribute('data-nodrag', '');
   body.appendChild(title); body.appendChild(url); body.appendChild(open); el.appendChild(body);
 }
@@ -206,7 +228,7 @@ function buildFile(el, it) {
   name.title = it.data.name || '';
   const open = document.createElement('a'); open.className = 'fopen'; open.setAttribute('data-nodrag', '');
   open.href = it.data.src || '#'; open.target = '_blank'; open.rel = 'noopener'; open.download = it.data.name || '';
-  open.textContent = 'Open ↗';
+  open.textContent = 'Open file';
   el.appendChild(icon); el.appendChild(name); el.appendChild(open);
 }
 

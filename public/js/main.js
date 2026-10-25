@@ -5,19 +5,21 @@ import { api } from './api.js';
 import { refreshIcons, toast } from './util.js';
 import { loadCam, applyCam, initViewport } from './viewport.js';
 import { render, renderCrumbs } from './cards.js';
-import { deselect, renameSelected, deleteItem, exitEdit } from './editing.js';
+import { deselect, renameSelected, deleteItem, exitEdit, flushPendingSaves } from './editing.js';
 import { closePalette, closeCtx } from './menus.js';
 import { copySelected, pasteClipboard, duplicateSelected } from './clipboard.js';
 import { arm, disarm, initTools } from './tools.js';
 import { initMobile, updateMobileChrome } from './mobile.js';
 import { initBoardChrome, updateSelectionChrome } from './boardchrome.js';
 import { initQuickNotes, isQuickNotesOpen } from './quicknotes.js';
+import { initOrganization, updateOrganization } from './organization.js';
 
 // Entry point: canvas loading/navigation, global keyboard + pointer handling,
 // and boot. Wiring for the viewport and toolbar lives in their own modules and
 // is activated here.
 
 export async function openCanvas(id) {
+  await flushPendingSaves();
   state.view = await api.canvas(id);
   if (state.view.error) { if (id !== state.rootCanvasId) return openCanvas(state.rootCanvasId); toast('Board not found'); return; }
   state.cam = loadCam(id);
@@ -28,6 +30,7 @@ export async function openCanvas(id) {
   updateSelectionChrome();
   render();
   applyCam();
+  updateOrganization();
   if (location.hash.slice(1) !== id) { history.replaceState(null, '', '#' + id); }
 }
 
@@ -68,6 +71,7 @@ initMobile();
 initBoardChrome();
 initQuickNotes();
 initTools();
+initOrganization();
 
 (async function boot() {
   refreshIcons();

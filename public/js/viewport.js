@@ -75,7 +75,7 @@ export function initViewport() {
   document.getElementById('zoomIn').onclick = () => zoomBy(1.2);
   document.getElementById('zoomOut').onclick = () => zoomBy(1 / 1.2);
   document.getElementById('zoomReset').onclick = () => { state.cam = { x: 80, y: 60, scale: 1 }; applyCam(); };
-  document.getElementById('exportBtn').onclick = () => toast('Tip: your boards auto-save to the server');
+  document.getElementById('exportBtn').onclick = () => { location.href = '/api/backup'; };
 
   dom.stage.addEventListener('wheel', (e) => {
     e.preventDefault();

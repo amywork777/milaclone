@@ -1,0 +1,583 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-25T22:15:50.753533+00:00",
+  "title": "Design System: Pinboard",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Primary",
+        "tonalRamp": [
+          "oklch(15% 0.0559 338.93)",
+          "oklch(27% 0.0559 338.93)",
+          "oklch(38% 0.0559 338.93)",
+          "oklch(49% 0.0559 338.93)",
+          "oklch(61% 0.0559 338.93)",
+          "oklch(72% 0.0559 338.93)",
+          "oklch(84% 0.0559 338.93)",
+          "oklch(95% 0.0559 338.93)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "canvas": {
+        "role": "neutral",
+        "displayName": "Canvas",
+        "tonalRamp": [
+          "oklch(15% 0.0041 91.45)",
+          "oklch(27% 0.0041 91.45)",
+          "oklch(38% 0.0041 91.45)",
+          "oklch(49% 0.0041 91.45)",
+          "oklch(61% 0.0041 91.45)",
+          "oklch(72% 0.0041 91.45)",
+          "oklch(84% 0.0041 91.45)",
+          "oklch(95% 0.0041 91.45)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "rail": {
+        "role": "neutral",
+        "displayName": "Rail",
+        "tonalRamp": [
+          "oklch(15% 0.0029 84.56)",
+          "oklch(27% 0.0029 84.56)",
+          "oklch(38% 0.0029 84.56)",
+          "oklch(49% 0.0029 84.56)",
+          "oklch(61% 0.0029 84.56)",
+          "oklch(72% 0.0029 84.56)",
+          "oklch(84% 0.0029 84.56)",
+          "oklch(95% 0.0029 84.56)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "chrome": {
+        "role": "neutral",
+        "displayName": "Chrome",
+        "tonalRamp": [
+          "oklch(15% 0.0029 84.56)",
+          "oklch(27% 0.0029 84.56)",
+          "oklch(38% 0.0029 84.56)",
+          "oklch(49% 0.0029 84.56)",
+          "oklch(61% 0.0029 84.56)",
+          "oklch(72% 0.0029 84.56)",
+          "oklch(84% 0.0029 84.56)",
+          "oklch(95% 0.0029 84.56)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Card",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.88)",
+          "oklch(27% 0.0000 89.88)",
+          "oklch(38% 0.0000 89.88)",
+          "oklch(49% 0.0000 89.88)",
+          "oklch(61% 0.0000 89.88)",
+          "oklch(72% 0.0000 89.88)",
+          "oklch(84% 0.0000 89.88)",
+          "oklch(95% 0.0000 89.88)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Border",
+        "tonalRamp": [
+          "oklch(15% 0.0060 59.64)",
+          "oklch(27% 0.0060 59.64)",
+          "oklch(38% 0.0060 59.64)",
+          "oklch(49% 0.0060 59.64)",
+          "oklch(61% 0.0060 59.64)",
+          "oklch(72% 0.0060 59.64)",
+          "oklch(84% 0.0060 59.64)",
+          "oklch(95% 0.0060 59.64)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "card-border": {
+        "role": "neutral",
+        "displayName": "Card Border",
+        "tonalRamp": [
+          "oklch(15% 0.0068 340.41)",
+          "oklch(27% 0.0068 340.41)",
+          "oklch(38% 0.0068 340.41)",
+          "oklch(49% 0.0068 340.41)",
+          "oklch(61% 0.0068 340.41)",
+          "oklch(72% 0.0068 340.41)",
+          "oklch(84% 0.0068 340.41)",
+          "oklch(95% 0.0068 340.41)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "tonalRamp": [
+          "oklch(15% 0.0076 308.18)",
+          "oklch(27% 0.0076 308.18)",
+          "oklch(38% 0.0076 308.18)",
+          "oklch(49% 0.0076 308.18)",
+          "oklch(61% 0.0076 308.18)",
+          "oklch(72% 0.0076 308.18)",
+          "oklch(84% 0.0076 308.18)",
+          "oklch(95% 0.0076 308.18)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Ink Soft",
+        "tonalRamp": [
+          "oklch(15% 0.0150 321.94)",
+          "oklch(27% 0.0150 321.94)",
+          "oklch(38% 0.0150 321.94)",
+          "oklch(49% 0.0150 321.94)",
+          "oklch(61% 0.0150 321.94)",
+          "oklch(72% 0.0150 321.94)",
+          "oklch(84% 0.0150 321.94)",
+          "oklch(95% 0.0150 321.94)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "ink-faint": {
+        "role": "neutral",
+        "displayName": "Ink Faint",
+        "tonalRamp": [
+          "oklch(15% 0.0165 322.39)",
+          "oklch(27% 0.0165 322.39)",
+          "oklch(38% 0.0165 322.39)",
+          "oklch(49% 0.0165 322.39)",
+          "oklch(61% 0.0165 322.39)",
+          "oklch(72% 0.0165 322.39)",
+          "oklch(84% 0.0165 322.39)",
+          "oklch(95% 0.0165 322.39)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "active-fill": {
+        "role": "neutral",
+        "displayName": "Active Fill",
+        "tonalRamp": [
+          "oklch(15% 0.0093 330.96)",
+          "oklch(27% 0.0093 330.96)",
+          "oklch(38% 0.0093 330.96)",
+          "oklch(49% 0.0093 330.96)",
+          "oklch(61% 0.0093 330.96)",
+          "oklch(72% 0.0093 330.96)",
+          "oklch(84% 0.0093 330.96)",
+          "oklch(95% 0.0093 330.96)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "active-ink": {
+        "role": "neutral",
+        "displayName": "Active Ink",
+        "tonalRamp": [
+          "oklch(15% 0.0477 336.02)",
+          "oklch(27% 0.0477 336.02)",
+          "oklch(38% 0.0477 336.02)",
+          "oklch(49% 0.0477 336.02)",
+          "oklch(61% 0.0477 336.02)",
+          "oklch(72% 0.0477 336.02)",
+          "oklch(84% 0.0477 336.02)",
+          "oklch(95% 0.0477 336.02)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "hover-fill": {
+        "role": "neutral",
+        "displayName": "Hover Fill",
+        "tonalRamp": [
+          "oklch(15% 0.0075 332.12)",
+          "oklch(27% 0.0075 332.12)",
+          "oklch(38% 0.0075 332.12)",
+          "oklch(49% 0.0075 332.12)",
+          "oklch(61% 0.0075 332.12)",
+          "oklch(72% 0.0075 332.12)",
+          "oklch(84% 0.0075 332.12)",
+          "oklch(95% 0.0075 332.12)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "column-fill": {
+        "role": "neutral",
+        "displayName": "Column Fill",
+        "tonalRamp": [
+          "oklch(15% 0.0063 75.40)",
+          "oklch(27% 0.0063 75.40)",
+          "oklch(38% 0.0063 75.40)",
+          "oklch(49% 0.0063 75.40)",
+          "oklch(61% 0.0063 75.40)",
+          "oklch(72% 0.0063 75.40)",
+          "oklch(84% 0.0063 75.40)",
+          "oklch(95% 0.0063 75.40)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "tools": {
+        "role": "neutral",
+        "displayName": "Tools",
+        "tonalRamp": [
+          "oklch(15% 0.0211 332.12)",
+          "oklch(27% 0.0211 332.12)",
+          "oklch(38% 0.0211 332.12)",
+          "oklch(49% 0.0211 332.12)",
+          "oklch(61% 0.0211 332.12)",
+          "oklch(72% 0.0211 332.12)",
+          "oklch(84% 0.0211 332.12)",
+          "oklch(95% 0.0211 332.12)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "text-selection": {
+        "role": "neutral",
+        "displayName": "Text Selection",
+        "tonalRamp": [
+          "oklch(15% 0.0314 337.30)",
+          "oklch(27% 0.0314 337.30)",
+          "oklch(38% 0.0314 337.30)",
+          "oklch(49% 0.0314 337.30)",
+          "oklch(61% 0.0314 337.30)",
+          "oklch(72% 0.0314 337.30)",
+          "oklch(84% 0.0314 337.30)",
+          "oklch(95% 0.0314 337.30)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "slate": {
+        "role": "neutral",
+        "displayName": "Slate",
+        "tonalRamp": [
+          "oklch(15% 0.0149 310.41)",
+          "oklch(27% 0.0149 310.41)",
+          "oklch(38% 0.0149 310.41)",
+          "oklch(49% 0.0149 310.41)",
+          "oklch(61% 0.0149 310.41)",
+          "oklch(72% 0.0149 310.41)",
+          "oklch(84% 0.0149 310.41)",
+          "oklch(95% 0.0149 310.41)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "gray": {
+        "role": "secondary",
+        "displayName": "Gray",
+        "tonalRamp": [
+          "oklch(15% 0.0083 319.45)",
+          "oklch(27% 0.0083 319.45)",
+          "oklch(38% 0.0083 319.45)",
+          "oklch(49% 0.0083 319.45)",
+          "oklch(61% 0.0083 319.45)",
+          "oklch(72% 0.0083 319.45)",
+          "oklch(84% 0.0083 319.45)",
+          "oklch(95% 0.0083 319.45)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "teal": {
+        "role": "secondary",
+        "displayName": "Teal",
+        "tonalRamp": [
+          "oklch(15% 0.0493 180.74)",
+          "oklch(27% 0.0493 180.74)",
+          "oklch(38% 0.0493 180.74)",
+          "oklch(49% 0.0493 180.74)",
+          "oklch(61% 0.0493 180.74)",
+          "oklch(72% 0.0493 180.74)",
+          "oklch(84% 0.0493 180.74)",
+          "oklch(95% 0.0493 180.74)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "green": {
+        "role": "secondary",
+        "displayName": "Green",
+        "tonalRamp": [
+          "oklch(15% 0.0601 138.77)",
+          "oklch(27% 0.0601 138.77)",
+          "oklch(38% 0.0601 138.77)",
+          "oklch(49% 0.0601 138.77)",
+          "oklch(61% 0.0601 138.77)",
+          "oklch(72% 0.0601 138.77)",
+          "oklch(84% 0.0601 138.77)",
+          "oklch(95% 0.0601 138.77)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "brown": {
+        "role": "secondary",
+        "displayName": "Brown",
+        "tonalRamp": [
+          "oklch(15% 0.0479 60.27)",
+          "oklch(27% 0.0479 60.27)",
+          "oklch(38% 0.0479 60.27)",
+          "oklch(49% 0.0479 60.27)",
+          "oklch(61% 0.0479 60.27)",
+          "oklch(72% 0.0479 60.27)",
+          "oklch(84% 0.0479 60.27)",
+          "oklch(95% 0.0479 60.27)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "yellow": {
+        "role": "secondary",
+        "displayName": "Yellow",
+        "tonalRamp": [
+          "oklch(15% 0.1097 91.66)",
+          "oklch(27% 0.1097 91.66)",
+          "oklch(38% 0.1097 91.66)",
+          "oklch(49% 0.1097 91.66)",
+          "oklch(61% 0.1097 91.66)",
+          "oklch(72% 0.1097 91.66)",
+          "oklch(84% 0.1097 91.66)",
+          "oklch(95% 0.1097 91.66)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "orange": {
+        "role": "secondary",
+        "displayName": "Orange",
+        "tonalRamp": [
+          "oklch(15% 0.0904 59.15)",
+          "oklch(27% 0.0904 59.15)",
+          "oklch(38% 0.0904 59.15)",
+          "oklch(49% 0.0904 59.15)",
+          "oklch(61% 0.0904 59.15)",
+          "oklch(72% 0.0904 59.15)",
+          "oklch(84% 0.0904 59.15)",
+          "oklch(95% 0.0904 59.15)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "red": {
+        "role": "secondary",
+        "displayName": "Red",
+        "tonalRamp": [
+          "oklch(15% 0.0963 18.29)",
+          "oklch(27% 0.0963 18.29)",
+          "oklch(38% 0.0963 18.29)",
+          "oklch(49% 0.0963 18.29)",
+          "oklch(61% 0.0963 18.29)",
+          "oklch(72% 0.0963 18.29)",
+          "oklch(84% 0.0963 18.29)",
+          "oklch(95% 0.0963 18.29)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "pink": {
+        "role": "secondary",
+        "displayName": "Pink",
+        "tonalRamp": [
+          "oklch(15% 0.0751 350.73)",
+          "oklch(27% 0.0751 350.73)",
+          "oklch(38% 0.0751 350.73)",
+          "oklch(49% 0.0751 350.73)",
+          "oklch(61% 0.0751 350.73)",
+          "oklch(72% 0.0751 350.73)",
+          "oklch(84% 0.0751 350.73)",
+          "oklch(95% 0.0751 350.73)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "purple": {
+        "role": "secondary",
+        "displayName": "Purple",
+        "tonalRamp": [
+          "oklch(15% 0.0547 303.93)",
+          "oklch(27% 0.0547 303.93)",
+          "oklch(38% 0.0547 303.93)",
+          "oklch(49% 0.0547 303.93)",
+          "oklch(61% 0.0547 303.93)",
+          "oklch(72% 0.0547 303.93)",
+          "oklch(84% 0.0547 303.93)",
+          "oklch(95% 0.0547 303.93)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "blue": {
+        "role": "secondary",
+        "displayName": "Blue",
+        "tonalRamp": [
+          "oklch(15% 0.0523 249.45)",
+          "oklch(27% 0.0523 249.45)",
+          "oklch(38% 0.0523 249.45)",
+          "oklch(49% 0.0523 249.45)",
+          "oklch(61% 0.0523 249.45)",
+          "oklch(72% 0.0523 249.45)",
+          "oklch(84% 0.0523 249.45)",
+          "oklch(95% 0.0523 249.45)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      },
+      "indigo": {
+        "role": "secondary",
+        "displayName": "Indigo",
+        "tonalRamp": [
+          "oklch(15% 0.0599 275.86)",
+          "oklch(27% 0.0599 275.86)",
+          "oklch(38% 0.0599 275.86)",
+          "oklch(49% 0.0599 275.86)",
+          "oklch(61% 0.0599 275.86)",
+          "oklch(72% 0.0599 275.86)",
+          "oklch(84% 0.0599 275.86)",
+          "oklch(95% 0.0599 275.86)"
+        ],
+        "rampPurpose": "Derived display-only OKLCH ramp; not an implemented CSS scale."
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Board title",
+        "purpose": "Editable current-board title."
+      },
+      "body": {
+        "displayName": "Card text",
+        "purpose": "Notes and task text."
+      },
+      "label": {
+        "displayName": "Quiet interface labels",
+        "purpose": "Tool rail, footer, save status and shortcuts."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card",
+        "value": "0 2px 6px #392d3910,0 12px 24px -20px #392d3940",
+        "purpose": "Default material card elevation."
+      },
+      {
+        "name": "dragging",
+        "value": "0 3px 10px #392d3920",
+        "purpose": "Lifted card while dragging; contextual toolbar."
+      },
+      {
+        "name": "dialog",
+        "value": "0 12px 50px #2c202c25",
+        "purpose": "Modal surface above the veil."
+      }
+    ],
+    "motion": [
+      {
+        "name": "button-background",
+        "value": "background .12s",
+        "purpose": "Quiet interaction feedback."
+      },
+      {
+        "name": "tidy-position",
+        "value": "left .32s cubic-bezier(.2,.8,.2,1),top .32s cubic-bezier(.2,.8,.2,1)",
+        "purpose": "Tidy up only, when prefers-reduced-motion is no-preference."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "transition:none!important;animation:none!important;scroll-behavior:auto!important",
+        "purpose": "Global reduce preference override."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile",
+        "value": "700px"
+      },
+      {
+        "name": "compact-desktop",
+        "value": "1000px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Confirmation button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Plum confirmation in a dialog.",
+      "html": "<button class=\"ds-confirm\">Create board</button>",
+      "css": ".ds-confirm{font-family:var(--sans,\"Helvetica Neue\",Helvetica,Arial,sans-serif);color:#fff;background:var(--accent,#79576e);border:1px solid var(--accent,#79576e);border-radius:5px;padding:8px 13px;cursor:pointer;transition:background .12s}.ds-confirm:focus-visible{outline:2px solid var(--accent,#79576e);outline-offset:3px;}.ds-confirm:disabled{opacity:.35;cursor:default}"
+    },
+    {
+      "name": "Tidy up",
+      "kind": "button",
+      "refersTo": "button-organize",
+      "description": "Quiet arrangement action alongside history and fit.",
+      "html": "<button class=\"ds-tidy\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\" rx=\"1\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\" rx=\"1\"/></svg>Tidy up</button>",
+      "css": ".ds-tidy{font-family:var(--sans,\"Helvetica Neue\",Helvetica,Arial,sans-serif);display:flex;align-items:center;gap:7px;border:1px solid var(--rail-border,#e3dfdc);background:#fdfcfa;border-radius:5px;padding:7px 9px;font-size:11px;min-height:32px;cursor:pointer;transition:background .12s}.ds-tidy:hover{background:#eee9ed}.ds-tidy:focus-visible{outline:2px solid var(--accent,#79576e);outline-offset:3px;}"
+    },
+    {
+      "name": "Dialog input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Search and board creation field.",
+      "html": "<input class=\"ds-input\" aria-label=\"Board name\" placeholder=\"What are you thinking about?\">",
+      "css": ".ds-input{font-family:var(--sans,\"Helvetica Neue\",Helvetica,Arial,sans-serif);width:calc(100% - 24px);padding:11px;border:1px solid var(--rail-border,#e3dfdc);border-radius:5px;font-size:14px;background:#fff;caret-color:var(--accent,#79576e)}.ds-input:focus-visible{outline:2px solid var(--accent,#79576e);outline-offset:3px;}"
+    },
+    {
+      "name": "Board navigation",
+      "kind": "nav",
+      "refersTo": "navigation-current",
+      "description": "Nested board list with a quiet current state.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Your boards\"><button aria-current=\"page\">My workspace</button><button class=\"ds-child\">Weekend ideas</button></nav>",
+      "css": ".ds-nav{width:185px}.ds-nav button{font-family:var(--sans,\"Helvetica Neue\",Helvetica,Arial,sans-serif);display:block;width:100%;border:0;border-radius:6px;background:transparent;color:var(--ink,#302e32);min-height:34px;padding:8px 9px;margin:1px 0;text-align:left;font-size:12px;cursor:pointer}.ds-nav button[aria-current]{background:#eae4e9;color:#62475b}.ds-nav button:hover{background:#eee9ed}.ds-nav button:focus-visible{outline:2px solid var(--accent,#79576e);outline-offset:3px;}.ds-nav .ds-child{padding-left:22px}"
+    },
+    {
+      "name": "Note card",
+      "kind": "card",
+      "refersTo": "note-card",
+      "description": "White material carrying a short title and thought.",
+      "html": "<article class=\"ds-note\" tabindex=\"0\"><h3>A small reminder</h3><p>Not every idea needs to become a project.</p></article>",
+      "css": ".ds-note{font-family:var(--sans,\"Helvetica Neue\",Helvetica,Arial,sans-serif);width:210px;padding:14px 16px;background:var(--card-bg,#fff);color:var(--ink,#302e32);border:1px solid #dfdadd;border-radius:var(--radius,6px);box-shadow:var(--card-shadow,0 2px 6px #392d3910,0 12px 24px -20px #392d3940)}.ds-note h3{font-size:14px;font-weight:550;margin:0 0 4px}.ds-note p{font-size:13px;line-height:1.6;color:#3c3f45;margin:0}.ds-note:hover{box-shadow:var(--card-shadow,0 2px 6px #392d3910)}.ds-note:focus-visible{outline:2px solid var(--accent,#79576e);outline-offset:3px;}"
+    },
+    {
+      "name": "Column",
+      "kind": "custom",
+      "refersTo": "column",
+      "description": "Flat grouping surface with a small color marker.",
+      "html": "<section class=\"ds-column\"><h3><span></span>Things to keep</h3><div class=\"ds-column-card\">A note, a reference, a thought.</div></section>",
+      "css": ".ds-column{font-family:var(--sans,\"Helvetica Neue\",Helvetica,Arial,sans-serif);width:250px;padding:14px 12px;background:#eae7e387;border-radius:5px;color:var(--ink,#302e32)}.ds-column h3{display:flex;align-items:center;gap:8px;margin:2px 4px 15px;font-size:13px;font-weight:550}.ds-column h3 span{width:6px;height:6px;border-radius:50%;background:var(--c-green,#8ca884)}.ds-column-card{padding:14px 16px;font-size:13px;line-height:1.6;background:#fff;border-radius:6px;box-shadow:var(--card-shadow,0 2px 6px #392d3910)}"
+    },
+    {
+      "name": "Task checkbox",
+      "kind": "input",
+      "description": "Accent selection and subdued completion.",
+      "html": "<label class=\"ds-task\"><input type=\"checkbox\"><span>Give a thought a home</span></label>",
+      "css": ".ds-task{font-family:var(--sans,\"Helvetica Neue\",Helvetica,Arial,sans-serif);display:flex;align-items:flex-start;gap:9px;font-size:13px;line-height:1.6;color:#3c3f45}.ds-task input{appearance:none;position:relative;width:17px;height:17px;border:1.6px solid #cfd2d8;border-radius:5px;margin:1px 0 0;cursor:pointer}.ds-task input:checked{background:var(--accent,#79576e);border-color:var(--accent,#79576e)}.ds-task input:checked:after{content:\"\";position:absolute;left:5px;top:1px;width:4px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}.ds-task input:checked+span{color:var(--ink-faint,#817982);text-decoration:line-through}.ds-task input:focus-visible{outline:2px solid var(--accent,#79576e);outline-offset:3px;}"
+    },
+    {
+      "name": "Board color chip",
+      "kind": "chip",
+      "description": "Small category color in a breadcrumb.",
+      "html": "<span class=\"ds-crumb\"><span class=\"ds-chip\" aria-hidden=\"true\"></span>My workspace</span>",
+      "css": ".ds-crumb{font-family:var(--sans,\"Helvetica Neue\",Helvetica,Arial,sans-serif);display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--ink,#302e32)}.ds-chip{display:block;width:14px;height:14px;background:var(--c-slate,#76717a);border-radius:4px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "A personal visual notebook",
+    "overview": "Pinboard is a light personal visual notebook: real notes, images, links, tasks, and nested boards on a movable canvas. Quiet, compact controls and a persistent board tree give collected material a home without turning the canvas into a dashboard.\n\nThe established tool route is operate mode: square structural panes, gently rounded controls, sans typography, and motion at interaction boundaries. The project-specific light Milanote-like direction overrides the copied kit\u2019s dark default. The single loop mark supplies the handmade detail; Tidy up is the signature interaction.",
+    "keyCharacteristics": [
+      "Warm neutral canvas and white material cards.",
+      "Quiet plum selection and keyboard focus.",
+      "Persistent orientation through a board tree, breadcrumbs, and global search.",
+      "Columns provide structure while the canvas remains free to arrange."
+    ],
+    "rules": [
+      {
+        "name": "The State Accent Rule",
+        "body": "Plum signals focus, selection, or an action; broad structural surfaces remain neutral.",
+        "section": "colors"
+      }
+    ],
+    "dos": [
+      "Do retain the light canvas and recognizable upstream editing tools.",
+      "Do use the board tree and grouped columns to provide organization.",
+      "Do keep the loop mark as the single handmade brand detail.",
+      "Do expose named controls, visible focus, and keyboard alternatives to dragging.",
+      "Do preserve reduced-motion behavior when adding interactions.",
+      "Do distinguish source-code publication from notebook storage in product language."
+    ],
+    "donts": [
+      "Don't replace the personal palette with the copied kit\u2019s dark defaults.",
+      "Don't introduce serif display type, ornamental motion, or dashboard decoration.",
+      "Don't turn every collected card into a saturated accent surface.",
+      "Don't claim the mobile canvas reflows into a vertical list.",
+      "Don't imply that a public fork makes private notebook data public."
+    ]
+  }
+}

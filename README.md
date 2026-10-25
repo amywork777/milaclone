@@ -1,3 +1,11 @@
+# Pinboard — Amy’s personal fork
+
+A visual notebook for notes, images, links, and tasks, with nested boards, columns, search, and a Tidy up action. Forked from the MIT-licensed Milaclone project below.
+
+See [PERSONAL.md](PERSONAL.md) for local setup, backups, and the changes in this fork.
+
+---
+
 # Milaclone: a self-hosted Milanote-style canvas board
 
 An infinite visual canvas for notes, to-do lists, links, images, columns, and

@@ -68,7 +68,7 @@ export function initMobile() {
     if (act.dataset.act === 'zoomin') zoomBy(1.2);
     if (act.dataset.act === 'zoomout') zoomBy(1 / 1.2);
     if (act.dataset.act === 'reset') { state.cam = { x: 80, y: 60, scale: 1 }; applyCam(); }
-    if (act.dataset.act === 'export') toast('Tip: your boards auto-save to the server');
+    if (act.dataset.act === 'export') document.getElementById('exportBtn').click();
     sheet.hidden = true;
   });
   document.addEventListener('pointerdown', (e) => {

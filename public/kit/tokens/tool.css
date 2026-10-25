@@ -1,0 +1,26 @@
+/* Tool: dense dark canvas for CAD, editors and internal apps. Quiet chrome; Amy's pink marks selection and state. */
+/* Load from Google Fonts when used: Doto (labels), Caveat (handwriting), Fraunces (soft serif). */
+:root {
+  --bg: #151516;
+  --surface: #1e1e20;
+  --surface-2: #2a2a2d;
+  --ink: #ededee;
+  --ink-soft: rgba(237, 237, 238, 0.72);
+  --ink-muted: rgba(237, 237, 238, 0.45);
+  --rule: rgba(255, 255, 255, 0.09);
+  --accent: #ff6fa3;
+  --accent-ink: #d6447e;
+  --font-sans: "Inter Tight", "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-sans);
+  --font-label: "Doto", var(--font-sans);
+  --font-hand: "Caveat", "Bradley Hand", cursive;
+  --text-body: 13px;
+  --text-small: 11px;
+  --text-display: 20px;
+  --tracking-display: -0.01em;
+  --tracking-label: 0.06em;
+  --radius-control: 8px;
+  --radius-surface: 12px;
+  --space-unit: 4px;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+}

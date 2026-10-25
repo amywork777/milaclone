@@ -2,6 +2,7 @@
 
 import { state, elMap } from './state.js';
 import { api } from './api.js';
+import { createSaveQueue } from './save-queue.mjs';
 import { render, renderCrumbs } from './cards.js';
 import { closePalette, closeCtx } from './menus.js';
 import { updateSelectionChrome } from './boardchrome.js';
@@ -47,18 +48,32 @@ export function renameSelected() {
 }
 
 const saveTimers = new Map();
+const saves = createSaveQueue((id, data) => api.patch(id, { data }), busy => {
+  const status = document.getElementById('saveStatus');
+  if (status) status.textContent = busy ? 'Saving…' : 'Saved on this Mac';
+});
+export async function flushPendingSaves() {
+  for (const timer of saveTimers.values()) clearTimeout(timer);
+  saveTimers.clear();
+  await saves.flush();
+}
 export function saveData(it, patch) {
   Object.assign(it.data, patch);
   if (it.type === 'board' && patch.title != null) it._childTitle = patch.title;
   if (it.type === 'board' && patch.icon != null) it._childIcon = patch.icon;
   clearTimeout(saveTimers.get(it.id));
+  saves.set(it.id, {...it.data});
+  const status=document.getElementById('saveStatus');if(status)status.textContent='Saving…';
   saveTimers.set(it.id, setTimeout(() => {
-    api.patch(it.id, { data: patch });
+    flushPendingSaves();
     if (it.type === 'board' && patch.title != null) renderCrumbs();
   }, 400));
 }
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flushPendingSaves();});
+window.addEventListener('beforeunload',e=>{if(saves.hasWork){flushPendingSaves();e.preventDefault();e.returnValue='';}});
 
 export async function deleteItem(id) {
+  await flushPendingSaves();
   await api.remove(id);
   state.view.items = state.view.items.filter(x => x.parentItemId !== id && x.id !== id);
   if (state.selectedId === id) state.selectedId = null;

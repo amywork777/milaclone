@@ -1,14 +1,30 @@
 'use strict';
 
-// Thin wrappers over the JSON endpoints exposed by the Node backend.
+async function request(url, options) {
+  const changing = options && options.method !== 'GET';
+  const status = document.getElementById('saveStatus');
+  if (changing && status) status.textContent = 'Saving…';
+  const response = await fetch(url, options);
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error || 'The change could not be saved.');
+  if (changing) {
+    if (status) status.textContent = 'Saved on this Mac';
+    window.dispatchEvent(new Event('workspace-changed'));
+  }
+  return result;
+}
+const json = (method, body) => ({ method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+
 export const api = {
-  async root() { return (await fetch('/api/root')).json(); },
-  async canvas(id) { return (await fetch('/api/canvas/' + id)).json(); },
-  async todos() { return (await fetch('/api/todos')).json(); },
-  async patchCanvas(id, body) { return (await fetch('/api/canvas/' + id, { method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) })).json(); },
-  async create(body) { return (await fetch('/api/item', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) })).json(); },
-  async patch(id, body) { return (await fetch('/api/item/' + id, { method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) })).json(); },
-  async patchMany(updates) { return (await fetch('/api/items', { method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({updates}) })).json(); },
-  async remove(id) { return (await fetch('/api/item/' + id, { method:'DELETE' })).json(); },
-  async upload(file) { const fd = new FormData(); fd.append('file', file); return (await fetch('/api/upload', { method:'POST', body:fd })).json(); }
+  workspace() { return request('/api/workspace'); },
+  history(direction) { return request('/api/history/' + direction, { method: 'POST' }); },
+  root() { return request('/api/root'); },
+  async canvas(id) { const response = await fetch('/api/canvas/' + encodeURIComponent(id)); return response.json(); },
+  todos() { return request('/api/todos'); },
+  patchCanvas(id, body) { return request('/api/canvas/' + id, json('PATCH', body)); },
+  create(body) { return request('/api/item', json('POST', body)); },
+  patch(id, body) { return request('/api/item/' + id, json('PATCH', body)); },
+  patchMany(updates) { return request('/api/items', json('PATCH', { updates })); },
+  remove(id) { return request('/api/item/' + id, { method: 'DELETE' }); },
+  upload(file) { const body = new FormData(); body.append('file', file); return request('/api/upload', { method: 'POST', body }); }
 };
