@@ -12,12 +12,13 @@ const path = require('path');
 // Point db.js at a fresh temp dir BEFORE requiring it (it opens the DB on load).
 const TMP = fs.mkdtempSync(path.join(os.tmpdir(), 'board-test-'));
 process.env.DATA_DIR = TMP;
+process.env.UPLOAD_DIR = path.join(TMP, 'uploads');
 
 const express = require('express');
 const app = express();
 app.use(express.json());
 app.use(require('../workspace-routes'));
-app.use(require('../routes'));
+
 
 let base;
 let server;

@@ -1,0 +1,10 @@
+DerivedData/
+.build/
+*.xcuserstate
+xcuserdata/
+build.log
+typecheck.log
+target-build.log
+.model-checks
+
+.build-transport.log

@@ -2,6 +2,7 @@
 
 import { state } from './state.js';
 import { api } from './api.js';
+import { createSaveQueue } from './save-queue.mjs';
 import { autoGrow, colorVar, lucideEl, refreshIcons, toast, rid } from './util.js';
 import { screenToWorld } from './viewport.js';
 import { createAt, defaultsFor } from './create.js';
@@ -89,6 +90,7 @@ function saveSettings() {
 // "type here" placeholders) are never surfaced as tasks.
 function normTask(t) {
   return {
+    ...t,
     id: t.id || rid(),
     text: typeof t.text === 'string' ? t.text : '',
     done: !!t.done,
@@ -104,7 +106,7 @@ function normTask(t) {
 async function load() {
   const r = await api.todos();
   qn.rootCanvasId = r.rootCanvasId;
-  if (savePending.size) return;   // a local edit is still in flight — keep ours
+  if (saveQueue.hasWork) return;   // a local edit is still in flight — keep ours
   qn.lists = (r.lists || []).map(l => ({
     id: l.id,
     canvasId: l.canvasId,
@@ -121,27 +123,28 @@ async function load() {
 }
 
 const saveTimers = new Map();
-const savePending = new Map();
+const saveQueue = createSaveQueue((id, body) => api.patch(id, { data: body }));
 function save(list, body) {
   qn.dirty = true;
   clearTimeout(saveTimers.get(list.id));
-  savePending.set(list.id, Object.assign(savePending.get(list.id) || {}, body));
-  saveTimers.set(list.id, setTimeout(() => flushSaves(list.id), 200));
+  // Snapshot task arrays so a subsequent keystroke cannot mutate an in-flight write.
+  saveQueue.set(list.id, structuredClone(body));
+  saveTimers.set(list.id, setTimeout(() => flushSaves(), 200));
 }
 
-// Writes are debounced while typing; anything still queued goes out as soon as
-// the user closes a sheet or leaves Quick notes, so nothing is lost.
-function flushSaves(only) {
-  const sent = [];
-  for (const [id, body] of savePending) {
-    if (only && id !== only) continue;
-    clearTimeout(saveTimers.get(id));
-    saveTimers.delete(id);
-    savePending.delete(id);
-    sent.push(api.patch(id, { data: body }).catch(() => toast('Could not save')));
-  }
-  return sent;
+function flushSaves() {
+  for (const timer of saveTimers.values()) clearTimeout(timer);
+  saveTimers.clear();
+  return [saveQueue.flush().catch(error => {
+    const status = document.getElementById('saveStatus');
+    if (status) status.textContent = 'Could not save. Keep this tab open.';
+    toast(error.message || 'Could not save. Keep this tab open.');
+  })];
 }
+window.addEventListener('beforeunload', event => {
+  if (saveQueue.hasWork) { flushSaves(); event.preventDefault(); event.returnValue = ''; }
+});
+
 const saveTasks = list => save(list, { tasks: list.tasks });
 const saveMeta = list => save(list, { title: list.title, tags: list.tags });
 
@@ -296,8 +299,11 @@ export function closeQuickNotes() {
   // once the last write has actually landed
   if (qn.dirty && state.view.canvas) {
     const id = state.view.canvas.id;
-    qn.dirty = false;
-    Promise.all(sent).then(() => openCanvas(id));
+    Promise.all(sent).then(() => {
+      if (saveQueue.hasWork) return;
+      qn.dirty = false;
+      return openCanvas(id);
+    });
   }
 }
 

@@ -5,8 +5,28 @@ const fs = require('fs');
 const path = require('path');
 const { db, stmt, id, rootCanvasId } = require('./db');
 const router = express.Router();
-const uploadDir = path.join(__dirname, 'public/uploads');
+const uploadDir = process.env.UPLOAD_DIR || path.join(__dirname, 'public/uploads');
 const past = [], future = [];
+let syncEpoch = stmt.getMeta.get('syncEpoch')?.value || 'initial';
+router.use('/api', (req, res, next) => {
+  const changing = ['POST','PATCH','DELETE'].includes(req.method);
+  const proceed = () => {
+    const current = stmt.getMeta.get('syncEpoch')?.value || 'initial';
+    if (current !== syncEpoch) { past.length = 0; future.length = 0; syncEpoch = current; }
+    res.setHeader('X-Pinboard-Epoch', current);
+    if (changing && req.headers['x-pinboard-epoch'] !== current && current !== 'initial') {
+      return res.status(409).json({ error: 'Your iPhone updated this notebook. Copy any unsaved text, then reload to see the synced copy.' });
+    }
+    next();
+  };
+  // Existing content routes are synchronous. Hold the writer lock from epoch
+  // validation through mutation so the separate sync process cannot interleave.
+  // Upload only writes a unique file; its later card creation remains guarded.
+  if (changing && req.path !== '/upload') {
+    try { db.transaction(proceed).immediate(); } catch (error) { next(error); }
+  } else proceed();
+});
+
 const snapshot = () => ({ canvases: db.prepare('SELECT * FROM canvases').all(), items: db.prepare('SELECT * FROM items').all() });
 const restore = db.transaction(data => {
   db.prepare('DELETE FROM items').run();
@@ -56,4 +76,7 @@ router.use('/api', (req, res, next) => {
   next();
 });
 
+// Keep content handlers inside this router: Express defers returning to the app,
+// which would otherwise release the epoch transaction before these handlers run.
+router.use(require('./routes'));
 module.exports = router;

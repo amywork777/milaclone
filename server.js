@@ -16,7 +16,6 @@ app.use('/uploads', (req, res, next) => {
 });
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(require('./workspace-routes'));
-app.use(require('./routes'));
 
 app.listen(PORT, HOST, () => {
   console.log(`\n  Canvas board running at http://${HOST}:${PORT}`);

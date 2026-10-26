@@ -1,10 +1,14 @@
 'use strict';
 
+let syncEpoch = null;
 async function request(url, options) {
   const changing = options && options.method !== 'GET';
   const status = document.getElementById('saveStatus');
   if (changing && status) status.textContent = 'Saving…';
+  if (changing && syncEpoch) options = { ...options, headers: { ...options.headers, 'X-Pinboard-Epoch': syncEpoch } };
   const response = await fetch(url, options);
+  // Keep the epoch from the loaded page until reload; never bless stale edits.
+  if (!syncEpoch) syncEpoch = response.headers.get('X-Pinboard-Epoch');
   const result = await response.json();
   if (!response.ok) throw new Error(result.error || 'The change could not be saved.');
   if (changing) {
@@ -19,7 +23,7 @@ export const api = {
   workspace() { return request('/api/workspace'); },
   history(direction) { return request('/api/history/' + direction, { method: 'POST' }); },
   root() { return request('/api/root'); },
-  async canvas(id) { const response = await fetch('/api/canvas/' + encodeURIComponent(id)); return response.json(); },
+  canvas(id) { return request('/api/canvas/' + encodeURIComponent(id)); },
   todos() { return request('/api/todos'); },
   patchCanvas(id, body) { return request('/api/canvas/' + id, json('PATCH', body)); },
   create(body) { return request('/api/item', json('POST', body)); },

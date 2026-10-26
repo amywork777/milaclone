@@ -10,7 +10,7 @@ const {
   rowToItem, breadcrumb, itemsForCanvas, deleteItemDeep
 } = require('./db');
 
-const UPLOAD_DIR = path.join(__dirname, 'public', 'uploads');
+const UPLOAD_DIR = process.env.UPLOAD_DIR || path.join(__dirname, 'public', 'uploads');
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
 const BOARD_ICONS = [
